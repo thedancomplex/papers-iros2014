@@ -41,20 +41,20 @@
 A lightweight, cross-platform, multiuser robot visualization \\ using the cloud*
 }
 
-\author{William Hilton$^{1}$, Paul Oh$^{2}$, Youngmoo Kim$^{3}$, Dan Lofaro$^{4}$% <-this % stops a space
-\thanks{*This work was supported in part by NSF CNS-0960061: MRI-R2 Unifying Humanoids Research.}% <-this % stops a space
+\author{William Hilton$^{1}$, Dan Lofaro$^{2}$, and Youngmoo Kim$^{3}$% <-this % stops a space
+\thanks{*This work was supported in part by NSF CNS-0960061: MRI-R2 Development of a Common Platform for Unifying Humanoids Research.}% <-this % stops a space
 \thanks{$^{1}$William Hilton is with Department of Electrical Engineering, Drexel University,
         Philadelphia, PA 19104, USA
-        {\tt\small wmhilton@drexel.edu}}%
-\thanks{$^{2}$Paul Oh is with Faculty of Mechanical Engineering, Drexel University,
-        Philadelphia, PA 19104, USA
-        {\tt\small paul@coe.drexel.edu}}%        
+        {\tt\small wmhilton@drexel.edu}}%        
+\thanks{$^{2}$Dan Lofaro is with Department of Electrical Engineering, George Mason University,
+        Fairfax, VA 22030, USA
+        {\tt\small dlofaro@gmu.edu}}%
+%\thanks{$^{2}$Paul Oh is with Faculty of Mechanical Engineering, Drexel University,
+%        Philadelphia, PA 19104, USA
+%        {\tt\small paul@coe.drexel.edu}}%        
 \thanks{$^{3}$Youngmoo Kim is with Faculty of Electrical Engineering, Drexel University,
         Philadelphia, PA 19104, USA
         {\tt\small ykim@drexel.edu}}%
-\thanks{$^{4}$Dan Lofaro is with Department of Electrical Engineering, George Mason University,
-        Fairfax, VA 22030, USA
-        {\tt\small dlofaro@gmu.edu}}%
 }
 
 \begin{document}
@@ -66,8 +66,6 @@ A lightweight, cross-platform, multiuser robot visualization \\ using the cloud*
 
 % % Youngmoo kim's thoughts
 % Education
-% Agree to strip DRC out of it
-% Strike first figure. Use detailed figure.
 % Talk more about pros/cons of Firebase as a database for robot telemetry data
 % Latency, race conditions? Real-time telemetry
 
@@ -79,27 +77,57 @@ A lightweight, cross-platform, multiuser robot visualization \\ using the cloud*
 % Audience of thousands for space rover landing on Mars.
 % Show system addresses all scenarios.
 
-% I don't know if you need installation instructions, code, or equations.
 % But be very specific in how you talk about the implementation.
 % Don't minimize the amount of work done to make it work well. (You didn't just download 3 components and ir worked)
 
-
-
 \begin{abstract}
-\todo[inline]{Revised}
-Humanoid robots are starting to move out of the controlled environment of research labs and into the field. 
-Working in the field brings new challenges to monitoring and operating these robots.
-Multiple people need to observe the robot's state simultaneously, and because the robot is in the field, it becomes important to support using mobile devices (smart phones and tablets) to monitor and control the robot.
-This paper describes an implementation of a humanoid robot monitoring solution that we developed to use with mobile devices.
-A rich 3D interface built using WebGL technology displays information about the robot's state and updates at 10Hz.
-The web interface can be deployed on a local network or scaled to support hundreds or thousands of viewers on the Internet by utilizing cloud services.
-The system was successfully tested with two different robots, and on multiple browsers and mobile devices.
+Cloud robotics emphasizes harnessing the power of the Web for robotics.
+Modern mobile devices connect to the Web and are convenient user interfaces.
+We decided to explore what was possible at the intersection of robotics, the Web, and mobile devices by creating a mobile web interface for a humanoid robot.
+This paper describes our implementation of a monitoring interface for high degree of freedom (DOF) robots that works with both desktop and mobile devices.
+Using only standard web technologies, our application provides a rich 3D interface that displays the robot's pose, orientation, and sensor data, and can update at 30Hz.
+It is easy to use, because there is no software for the user to install; it runs using the device's mobile browser.
+The web interface can be deployed on a private or public cloud, and is designed to scale to support hundreds or thousands of viewers by utilizing cloud services.
+The system was successfully tested with two different robots and on multiple browsers and mobile devices.
 \end{abstract}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{INTRODUCTION}
-\todo[inline]{TODO: Rework}
+Mobile devices (smartphones and tablets) have improved so much in a few short years that they are rapidly encroaching on niches previously held by laptops and desktops.
+But traditional software used in robotics research, such as the Linux console and ROS, does not lend itself to running on mobile devices.
+Their user interfaces were designed for desktop screens, rely heavily on keyboard interaction, and aren't designed for touch interaction.
+
+While desktops and laptops will undoubtedly remain the primary devices on which robotics software and algorithms are written, there are times when mobile devices would be useful.
+Particularly when working with mobile robots, it makes sense to use mobile hardware.
+Laptops are cumbersome to walk around with compared to a lightweight tablet.
+Mobile devices then would be good for user interfaces to the robot.
+
+However, writing software specifically for mobile devices is burdensome, because much work must be duplicated to write native apps for desktops, Android, and iOS.
+Furthermore, once written, there are additional hurdles of publishing the application to the App store of the platform(s) of choice.
+Web applications, in contrast are cross-platform by default.
+The same code can adjust to different screen size, so you don't need to maintain separate versions for mobile and desktop.
+Because it is just a webpage, to update the software all you need to do is hit ``Refresh''.
+For these reasons, we felt it would be best to write a web application rather than a native application.
+
+As researchers, we were interested in developing an easy-to-use tool that would be useful to us as we worked with our own robots, Hubo 2+ \cite{park2007mechanical} and DRC Hubo\footnote{\url{http://www.drc-hubo.com/}}.  
+Therefore we created interfaces to increase our situational awareness.
+For instance, our 3D WebGL interface allows us to visualize the amount of force and torque on the robots arms and wrists.
+We also created a second interface that presents detailed data about the joints and sensors in a table, where joints with errors would be highlighted red.
+Since this was our first system, we decided to make it read-only so the interfaces are for monitoring the robot only, not controlling it.
+
+Because the application runs in the cloud, there is enormous potential for distance collaboration and education.
+Consider a massive open online course (MOOC) that teaches robotics and had a live demonstration.
+Instead of merely streaming video to students, imagine they had access to a live feed from the robot's sensors and internal state.
+Or perhaps for future Mars lander missions, instead of showing premade computer graphics illustrating where the lander was and what it is doing, NASA could have a web application with a 3D model of the rover that is driven in real time by the rovers's actual telemetry data.
+
+\begin{figure}[thpb]
+  \centering
+  \includegraphics[width=3in]{figures/hubo.jpg}
+  \caption{The WebGL interface for Hubo 2+ running on a Nexus 7 tablet in fullscreen mode.}
+  \label{fig:Hubo2}
+\end{figure}
+
 % Cross-platform
 % Zero install
 %   for these platforms
@@ -110,147 +138,88 @@ The system was successfully tested with two different robots, and on multiple br
 % Increases situational awareness
 % Tested on two platforms
 
-% It's not about Hubo or hubo-ach. It's about all robots.
 
-After spending many decades in research laboratories or factories, robots are beginning to enter mainstream life.
-Examples of this are the Roomba, the Google robotic car, and new factory robots like Baxter that are easier to program.
-This year, the DARPA Robotics Challenge (DRC) encouraged humanoid robots to emerge from research labs and attempt practical tasks in the field.
-Bipedal humanoid robots pose a unique challenge to users because of their complexity and inherent instability.
-This complexity can be dealt with by assigning multiple people to monitor the robot.
+% Connects people around the globe with your robot.
+% Enables better sharing.
+% Enables better collaboration.
+% Lastly, we made it work on mobile.
 
-However, traditional tools for monitoring a robot, such as Secure Shell (SSH) and Rviz, are not well suited for being used in the field.
-First, they were designed for workstations, but laptops are cumbersome to walk around with.
-Particularly when working with mobile robots, it make sense to use mobile hardware.
-In today's computing environment, this means tablets and smart phones.
-The advantage of using tablet devices instead of laptops for monitoring and controlling mobile robots has been recognized by robotics researchers. \cite{speerslightweight}
-Second, traditional robotics software tends to be complicated to install and use.
-They are also tools designed by roboticists for roboticists, and while humanoids may only be used by roboticists for now, if they are to be useful for disaster recovery as DARPA desires, they must have interfaces that can be used by non-roboticists.
-Third, tablets and smart phones have less computing power than laptops and desktops, and battery life must be conserved.
-Any robot monitoring software designed for tablets should be lightweight to minimize the amount of energy consumed by the application.
-% Cite Fukishima example
-Therefore, there is a niche for new robotics software that is easy to use and optimized to work well in the field on low-powered mobile devices such as tablets and smartphones.
-
-% We developed this and tested for DRC (deemphasize)
-For the DRC, we developed a prototype system for monitoring a humanoid robot's state through a web interface optimized for tablet displays.
-It is simple enough that anyone could start using it in seconds, but still provides a rich set of information necessary for monitoring and debugging the robot's performance.
-% This sentence doesn't belong here.
-% "By using standard technologies already installed (or popular apps) on these devices.
-By using modern HTML5 and JavaScript technologies, we were able to provide a 3D graphical interface of the robot and near-realtime updates of the robot's pose and sensor data.
-This graphical frontend was served by a central server, which integrated with the hubo-ach library used by the robot.
-We implemented this interface for both the Hubo 2+ model and the DRC Hubo model. \cite{park2007mechanical} \footnote{\url{http://www.drc-hubo.com/}}
-
-% Insert picture of Hubo in a pose + physical phone side-by-side, show fingers grabbing the phone.
-
-\cite{lofaro2013unified}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{RELATED WORK}
-\todo[inline]{TODO: Rework}
 % We're focussing on monitoring remotely
 % These are the ways its currently done
-
-Another example of early efforts to port traditional robot monitoring software to tablets is the recent work to write native Android version of \texttt{rviz}.
+Robotics software for mobile systems is still in its infancy.
+One example of early efforts to port traditional robot monitoring software to tablets is the recent work to write native Android version of \texttt{rviz}.
 Due to the differences between the Android tablet environment and desktop Ubuntu, Rviz for Android had to be ``written almost entirely from scratch''. \cite{rviz_android}
-% Mention it's incomplete and insufficient for our needs.
-This highlights a problem with writing software for tablets.
-% Put this earlier. (Make topic sentence to emphasize.)
-Writing software specifically for tablets is burdensome, because much work must be duplicated to write native apps for desktops, Android, and iOS.
-Furthermore, once written, there are additional hurdles of publishing the application to the App store of the platform(s) of choice.
-This is why we chose to eschew a native Android app and write a web application instead.
-% Just hit Refresh
-Our system escapes all these hurdles by being written as a web application that requires zero installation.
-% ^ Put some of this in the Introduction / final paragraph
-Although in writing the native version of \texttt{rviz} for Android,``limited support'' for both WebSockets and WebGL on Android and iOS devices is cited as a reason to write a native Android app, we feel that it is only a short matter of time before these technologies are well supported.
+This highlights the problem discussed in the Introduction with regard to writing native apps for mobile devices, which we avoid by writing a web app.
+Because of this, our app is not limited to Android.
+In writing the native version of \texttt{rviz} for Android,``limited support'' for both WebSockets and WebGL on Android and iOS devices is cited as a reason to write a native Android app.
+However, \texttt{rviz} for Android was started in 2011, and things have changed.
+% NOTE: Actually we don't use web sockets. :-/ Just Socket.IO
 At the time of writing, WebSockets are supported by all major desktop and mobile browsers except Opera Mini and the stock Android browser.\footnote{\url{http://caniuse.com/websockets}}
-(We used Chrome for Android in our experiments.)
-WebGL is less supported, but currently available on the desktop versions of all major browsers, and both Chrome and Firefox for Android.\footnote{\url{http://caniuse.com/webgl}}
-Thinking towards the future then, we are proudly pushing forward with using WebGL for mobile applications.
+Although WebGL is still not turned on in iOS, it is well supported by both Chrome and Firefox for Android.\footnote{\url{http://caniuse.com/webgl}}
+WebGL is enabled for iAds on iOS, so hopefully it will be enabled for all websites in a future version of iOS. \cite{iAd}
+We primarily used Chrome for our development.
+Planning for the future then, we are proudly pushing forward with using WebSockets and WebGL for mobile web applications.
 
-% We are not < is too negative
-% Say "A successful example of using WebGL"
-We are not the first to use WebGL to create an interactive 3D web interface for robots (although we may be the first such interface for a \textit{bipedal humanoid} robot).
-The Robot Web Tools collection has \texttt{ros3d.js} which loads models in Universal Robot Description Format (URDF) using \textit{Three.js} library (which uses WebGL or \texttt{<canvas>} for rendering). \cite{alexander2012robot}
-Two more such projects are \texttt{wviz}\footnote{\url{https://github.com/jihoonl/wviz}} and \footnote{\url{http://mymodelrobot.appspot.com/}}.
-One might say it is an idea whose time has come, or convergent evolution.
-One might say our own solution, \texttt{WebGLRobots.js}, is ``yet another'' open source URDF loader.
-Ours is the first to support robot meshes defined in STL format instead of Collada.
-However, it lacks texture support found in \texttt{wviz} and \texttt{ros3d.js}.
-In the future, we hope we can merge our URDF loading code with that used in \texttt{ros3d.js}.
+A successful example of using WebGL to create an interactive 3D web interface for robots is \texttt{ros3d.js} from the Robot Web Tools suite.
+It loads models in Universal Robot Description Format (URDF) using the \textit{Three.js} library (which uses WebGL for rendering). \cite{alexander2012robot}
+Another such project is \texttt{wviz}\footnote{\url{https://github.com/jihoonl/wviz}} which is a limited \texttt{rviz} implementation for the web browser using WebGL.
+Yet another website, \url{mymodelrobot.appspot.com} by Igor Zubrycki, lets users edit URDF files and see the results in a WebGL visualization, enabling students to experiment with designing their own robot.
+These tools use WebGL to visualize robots, but not on mobile devices.
+Our solution appears to be the first to support robot meshes defined in STL format instead of Collada.
+However, it currently lacks texture support found in \texttt{wviz} and \texttt{ros3d.js}.
 
 % Borrowed rosbridge for inspiration.
-% Borrowed URDFs from OpenHubo.
-Robotics software for mobile systems is still in its infancy.
 The most popular robotics software collection of the moment is Robot Operating System (ROS). \cite{quigley2009ros}
-% Be more positive. low-powered not underpowered, etc
-However, tablets are underpowered and do not meet the system requirements to run ROS.
-A workaround is needed then for tablets to interface with robots running ROS.
+However, mobile devices are low-powered and do not meet the system requirements to run ROS.
+A workaround is needed then for mobile devices to interface with robots running ROS.
 Rosbridge is a project designed to ease the interfacing of non-ROS systems with ROS systems. \cite{crick2011rosbridge}
 The Rosbridge server converts ROS messages into plain text JSON formatted messages and uses Tornado, a Python web server, to send them to non-ROS over WebSockets.
 Rosbridge has been used to make web interfaces that interact with remote ROS-enabled robots. \cite{pitzer2012pr2}
 Notably, it has also been used to enable Android applications to communicate with ROS-enabled robots.
 Tablet interfaces exploiting Rosbridge to talk to ROS-enabled robots include ``wheeled, air, surface, and underwater vehicles''.  \cite{speers2013diver}
 However, Rosbridge has also been used to do the opposite: allow non-ROS robots to interface with ROS-enabled computers. \cite{dallaroslink} \cite{aznar2014ros}
-Because the Hubo platform does not use ROS as a controller, we decided to build a new system to transport \texttt{hubo-ach} data structures over a network rather than use Rosbridge.
-
-\todo{Find a home for:} \cite{brownapplications} \cite{leeweb} \cite{crick2012ros} \cite{lofaro2012humanoid} 
+Hubo is ROS compatible, so we might have used Rosbridge as our server backend.
+However, we wanted to have more control over the bandwidth that the server used in order to get the fastest possible updates, and to supplement the WebSocket technolgoy used by Rosbridge with other frameworks like Firebase.
+Therefore we borrowed inspiration from Rosbridge, but not the implementation.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{METHODOLOGY}
 
 \subsection{Overview of System}
-\todo[inline]{TODO: Rework}
+
+Fig. \ref{fig:Overview} shows a general overview of the system.
+Since it is a monitoring system, we can consider data starting at the robot and flowing to the client interface.
+As shown in the diagram, both private and public cloud configurations were developed and tested.
+The robot, sniffer, and client interfaces are described in more detail that follows.
+
 \begin{figure}[thpb]
   \centering
-  \todo[inline]{Revised Figure}
   \includegraphics{figures/DetailedOverview.pdf}
   \caption{Detailed overview of system}
   \label{fig:Overview}
 \end{figure}
 
-Fig. \ref{fig:Overview} shows a general overview of the system.
+\subsection{Robot}
 % Transition to CAN-bus etc is too jarring.
 % Put in a paragraph called "Robot" or something
-The Hubo2+ and DRC-Hubo robots operate using a central computer which communicates with the motor control boards and onboard sensors via a CAN bus.
-Communicating to the CAN bus is handled by the \texttt{hubo-ach} daemon. \cite{lofaro2013unified}
-This communicates with other processes via a shared memory file using the ACH IPC.  \cite{dantam2012robust}
-The robot controller and motion planner run as separate processes that communicate with the \texttt{hubo-ach} daemon via the shared memory.
-% Don't start the sentence with "because"
-% Make sentence positive
-% Hubo-ach's remote abilities allow us to offload the webserver 
-% hubo-ach remote up to 1kHz over Ethernet
-Because the robot computer has limited processing power and its performance is mission critical, we do not to run services such as an HTTP or WebSocket server on the robot itself.
-Instead, by using ach network daemon\footnote{\url{http://golems.github.io/ach/manual/\#AEN437}} the shared memory file on the robot is mirrored to another computer on the local network.
-This computer acts as the server for our zero-installation robot monitoring webapp.
-It runs a ``sniffer'' program that reads robot state data from the shared memory file.
 
-% This should be at the beginning of System Overview.
-There are two setup possibilities.
-In the most common case, the person monitoring the robot is nearby and connected to the same local wireless network as the robot.
-In this scenario, the web application is served up by the computer running the sniffer using a simple HTTP server.
-The clients connect by navigating to the IP address of this computer.
-Once the interface loads, it connects to the sniffer application via a WebSocket to receive robot state data updates published at a regular frequency.
-
-% Bring up "private cloud" vs "public cloud" options
-% Explain how the bandwidth between the robot and the cloud is fixed, and does not depend on the number of users.
-% Mention this protects from DNOS attack.
-Scenarios might arise however, when the user monitoring the robot is not on the same local network.
-For instance, perhaps collaborators from another university want to run the monitoring app, or you want to share the monitoring app with everyone on the Internet so large numbers of people can observe what the robot is doing.
-% Delete this. Replace with "situational awareness".
-(Such a scenario might make sense at large robotics competitions, for instance, to generate publicity for one's team.)
-For this use case, we developed a ``cloud'' approach.
-Instead of hosting a web server on the local robot network, the application is hosted by a hosting provider.
-% Bring up scaling earlier in Methodology.
-To make scaling easy, our web application requires no server-side logic.
-A static file hosting provider like Github Pages\footnote{\url{github.io}} is sufficient.
-To distribute robot state updates, we use a third-party cloud service called Firebase.\footnote{\url{https://www.firebase.com/}}
-The sniffer program only maintains one connection, to Firebase's servers, where it streams robot state data.
-The Firebase servers then connect to every browser running the interface and forward incoming data from the sniffer in near real-time (latency on the order of less than half a second).
-This allows potentially hundreds or thousands of users to monitor the robot, while having lower network stress than the locally hosted scenario.
+Both Hubo robots are controlled by body computers located in the robot's torso, which communicate via a controller area network (CAN) bus with motor control boards that control the motors.
+The body computer runs Ubuntu 12.04 Linux.
+The control software for Hubo is developed using Hubo-Ach, a framework that handles communicating with the motors over the CAN-bus.\cite{lofaro2013unified}
+Hubo-Ach communicates with other processes such as the controller and motion planner via the ACH IPC, which is based on memory mapped files.\cite{dantam2012robust}
+Hubo-Ach has remote functionality allowing up to 1kHz communications between computers over Ethernet.
+By using Hubo-Ach's remote abilities, we can offload the web server component of our system to another computer, freeing resources on the Hubo body computer.
+This second computer is the ``Sniffer'' because it reads from the Hubo-Ach channel.
+The sniffer computer acts as the server for our interface.
 
 \subsection{Server Implementation}
-\todo[inline]{Revised}
+%- Some won't be familiar with WebGL and WebSockets.  You should provide at least a brief description / definition.
 The primary of the system design was to be highly portable and zero installation.
 Because the client interface is web-based, the only part of the system that has to be installed is the server.
+(The server is labeled ``Sniffer'' in Fig. \ref{fig:Overview} because it sniffs the robot state from the hubo-ach channel.)
 Traditional HTTP servers such as Apache can be complicated to install and configure, particularly if the server-side logic requires installing additional environments such as PHP.
 For our implementation, we used a platform called \textit{Node}\footnote{\url{http://nodejs.org/}} as the backend.
 
@@ -264,132 +233,156 @@ Thus all of the source code for our interface is available at: \url{https://bitb
 The server software was tested on Ubuntu 12.04 LTS because that is what our lab uses to operate our Hubo robots.
 However, the client side of course is cross-platform and supported by multiple browsers and operating systems.
 
-The server publishes robot states at a periodic interval.
+The sniffer publishes robot states at a periodic interval.
 After optimizing the performance as described in the next section, we were able to achieve updates at 30 frames per second (FPS).
 An update rate of 30 FPS resulted in very smooth animations in the interface that were pleasing to the eye.
 However, for practical purposes the framerate was reduced to 10 FPS because a human's reaction time is no better than 1/10th of a second, so faster frame rates (while aesthetically pleasing) were not of much practical value for monitoring the robot. \cite{kosinski2008literature}
 This cut down on bandwidth.
 
-The advantage of using a cloud service like Firebase is that the burden of scaling a webserver to support large loads is not on the developer.\todo[inline]{Cover in more detail!!!}
+How the sniffer publishes robot state data depends on whether you are running the server in ``public cloud'' or ``private cloud'' mode.
+In private cloud mode, the sniffer publishes state data using a library called Socket.IO\footnote{http://socket.io}.
+On the server side this is a Node module, and on the client side it is a JavaScript file you include in the webpage.
+Socket.IO provides an abstract socket that can be used to pass asynchronous messages between the client and server without having to refresh the webpage.
+On modern browsers this socket is implemented using HTML5 WebSocket technology, but because Socket.IO has multiple fallback technologies, it will work with browsers as old as Internet Explorer 5.5 or Firefox 3.
+Using Socket.IO allows us to run the user interface on a local network without any external Internet connection.
+
+In public cloud mode, we use a different mechanism for publishing state data.
+If hundreds or thousands of users across the globe are using the system, we do not want the burden of serving such large traffic loads to fall on the sniffer computer.
+In fact, the connection between the local robot network and the Internet will generally have a finite bandwidth, limited by a WiFi router or similar.
+Instead of connecting to all those browsers the sniffer computer, we employ a third-party cloud service called Firebase.
+Firebase provides a persistent tree-like structure ``database'' where any change made to the database by one client is (almost) instantly reflected in all the other clients (e.g. it synchronizes the data between clients).
+It can be used for multi-directional communication between instances of web applications running on web browsers.
+In the current web interface though, we are just using it for server-to-client communication.
+The sniffer only maintains one connection, to Firebase's servers.
+When the Firebase is updated, any running instances of the client interface are notified with the updated data.
+
+The client interface consists of static HTML, CSS, and JavaScript files.
+In private cloud mode, the sniffer can also act as the host for the web interface, using Node as an HTTP server.
+The users simply type in the IP Address of the sniffer computer into their web browser.
+In public cloud mode, the client interface files can be hosted by any hosting provider.
+Because the web interface contains a hardcoded URL pointing to the Firebase where state data updates are, it doesn't matter what the address of the client interface is.
+One can host the web interface on a lab website, or a provider such as Github Pages.
 
 \subsection{Client Interface}
-\todo[inline]{TODO: Rework}
 We chose to write the client in HTML5 + JavaScript in order to be cross-platform, zero-install, and future-proof.
-The goal of our interfaces was to improve situational awareness of the robot operator, who may or may not be within a line of sight of the robot.
+The goal of our interfaces was to improve situational awareness of the robot operator, who may or may not be within a line of sight of the robot, and provide useful debugging information about the robot's motors.
 
 There are two interfaces we developed.
-The first is a graphical qualitative interface, that shows the pose, orientation, and force-torque data of the robot as a 3D model that can be rotated, panned, and zoomed. \ref{fig:Qualitative}.
-The second is a quantitative interface, which shows the joint reference positions, encoder values, sensor data, and motor board error flags in a table. \ref{fig:Quantitative}.
-These two representations complement each other: the qualitative interface shows the big picture, and the quantitative interface provides the fine details.
-Screenshots of the interfaces are shown in Fig. \ref{fig:Screenshots}.
+The first, shown in Fig. \ref{fig:Qualitative}, is a graphical interface that shows the pose, orientation, and force-torque data of the robot as a 3D model that can be rotated, panned, and zoomed.
+The second, shown in Fig. \ref{fig:Quantitative}, is a plain text interface, which shows the joint reference positions, encoder values, sensor data, and motor board error flags in a table.
+These two representations complement each other: the 3D interface shows the big picture, and the plain text interface provides the fine details.
 
-% Remove (limited bandwidth) bit. Make the connection between the robot and the Internet what is "limited bandwidth"
 \begin{figure*}[ptb]
     \centering
     \begin{subfigure}[b]{2.5in}
         \centering
         \includegraphics[width=2in]{figures/QualitativePortrait.png}
-        \caption{The qualitative interface displays the robot's pose, as well as force-torque information.}
+        \caption{The WebGL interface displays the robot's pose as well as force-torque data.}
         \label{fig:Qualitative}
     \end{subfigure}%
     \quad
     \begin{subfigure}[b]{2.5in}
         \centering
         \includegraphics[width=2in]{figures/QuantitativePortrait.png}
-        \caption{The quantitative interface displays detailed information about each joint. }
+        \caption{The plain text interface displays detailed data about each joint. }
         \label{fig:Quantitative}
     \end{subfigure}%
-    \caption{Screenshots of the interfaces}
-    \todo[inline]{Final figures?}
+    \caption{Screenshots of the interfaces on a Nexus 7 tablet.}
     \label{fig:Screenshots}
 \end{figure*}
 
-Two interfaces were provided to handle two different modes of analysis.
-The first interface is a visual, qualitative display.
-The robot's state is represented with the pose, orientation, and color of the 3D model.
-The second interface is a numerical, quantitative display.
-The robot's state values are displayed directly in a tabular format.
-The first interface is useful for getting an overall sense of the robot's performance and making sure it is behaving correctly.
-The second interface is useful for debugging and includes the status of individual motor boards.
-When it becomes apparent that a joint is not moving or a force torque sensor is miscalibrated, examining the numerical display provides more exacting insight.
-The qualitative visual interface is described in this section.
+The WebGL interface is useful for getting an overall sense of the robot's state.
+Visualizations are much more efficient for humans than reading raw numbers.
+We can more easily see problems, discrepancies, etc.
+The plain text interface is useful for debugging and includes the status of individual motor boards.
+When it becomes apparent that a joint is not moving or a force torque sensor is miscalibrated, examining the numbers in the raw plain text display provides insight.
 
-The 3D models used by this visualization tool come from the open source Hubo-in-the-Browser project, which is an ongoing project to make a virtual Hubo that can be programmed and simulated in the browser.\footnote{\url{wmhilton.github.io/hubo-js}}
-The models themselves are the same URDF models used in the OpenHubo robot simulator that is based on OpenRAVE. \cite{zhang2013motion}
-To import the model into JavaScript, Hubo-in-the-Browser parses the URDF file for the model and loads the individual body meshes using the \textit{Three.js} library.\footnote{\url{threejs.org}}
+The 3D models used by this visualization tool come from the OpenHubo project.\cite{lofaro2012humanoid}
+They are the same URDF models used in the OpenHubo robot simulator that is based on OpenRAVE.
+To import the model into the browser, we wrote a JavaScript fucntion to parse the URDF file for the model and load the individual body meshes using the \textit{Three.js} library.\footnote{\url{threejs.org}}
 Both meshes in Collada or STL format are supported.
-From the kinematic information in the URDF file, a hierarchical virtual robot object is constructed in JavaScript.
+From the kinematic information in the URDF file, we automatically construct a hierarchical virtual robot object.
 Within this virtual robot object is an array of joint objects.
-Changing the value property of the joint object triggers a function that changes the 3D model by rotating the appropriate links and re-renders it.
-However, because rendering operations are computationally expensive, in practice we disable autorendering and only re-render the robot after all of its joint values have been updated.
-% State in introduction that it was tested on these two platforms.
-Because the kinematic models for the robot are not hard-coded by loaded dynamically, it was straightforward for us to develop the same app for both Hubo 2+ and DRC-Hubo.
+Changing the value property of the joint object triggers a function that rotates the appropriate links and re-renders the robot.
+To improve efficiency, in practice we disable auto re-rendering and only re-render the robot once all of its joints have been updated.
+Because the kinematic models for the robot are not hard-coded by loaded dynamically, it was straightforward for us to develop the same app for both Hubo 2+ (Fig. \ref{fig:Hubo2}) and DRC-Hubo (Fig. \ref{fig:DRCHubo}).
 
-% Turn off motor controllers to pose in a waving position. Move all limbs some.
-% Remove (limited bandwidth) bit. Make the connection between the robot and the Internet what is "limited bandwidth"
-\begin{figure*}[ptb]
-    \centering
-    \begin{subfigure}[b]{3in}
-        \centering
-        \includegraphics[width=3in]{figures/hubo.jpg}
-        \caption{Demo on a Nexus 7 tablet in front of Hubo 2+.}
-        \label{fig:Hubo}
-    \end{subfigure}%
-    \quad
-    \begin{subfigure}[b]{3in}
-        \centering
-        \includegraphics[width=3in]{figures/hubo.jpg}
-        \caption{Demo on a Nexus 5 phone in front of DRC Hubo.}
-        \label{fig:DRCHubo}
-    \end{subfigure}%
-    \caption{Photos of the qualitative display in full screen mode in front of the robot(s).}
-    \todo[inline]{God I still need better figures.}
-    \label{fig:Photos}
-\end{figure*}
+\begin{figure}[thpb]
+  \centering
+  \includegraphics[height=3in]{figures/drchubo.jpg}
+  \caption{Testing the fullscreen WebGL interface for DRC Hubo running on a Nexus 5 phone.}
+  \label{fig:DRCHubo}
+\end{figure}
 
-The following robot state information is displayed by the client:
+%\begin{figure*}[ptb]
+%    \centering
+%    \begin{subfigure}[b]{3in}
+%        \centering
+%        \includegraphics[width=3in]{figures/hubo.jpg}
+%        \caption{Demo on a Nexus 7 tablet in front of Hubo 2+.}
+%        \label{fig:Hubo}
+%    \end{subfigure}%
+%    \quad
+%    \begin{subfigure}[b]{3in}
+%        \centering
+%        \includegraphics[height=3in]{figures/drchubo.jpg}
+%        \caption{Demo on a Nexus 5 phone in front of DRC Hubo.}
+%        \label{fig:DRCHubo}
+%    \end{subfigure}%
+%    \caption{Photos of the WebGL display in full screen mode in front of the robot(s).}
+%    \todo[inline]{Are these good enough?}
+%    \label{fig:Photos}
+%\end{figure*}
 
-\subsubsection{Joint Positions}
-\todo[inline]{TODO: Rework}
+The following sections describe the data visualizations in more detail.
+
+\subsubsection{Joint Angles}
 % Goals: is the robot over-torquing itself
 % Is it in desired pose 
 % This allows the user to easily see this and use their smarts
 The interface visualized joint angles by setting joint angles on the WebGL robot model.
-Two sets of angles are displayable:
+The interface lets users toggle between two sets of angles:
 \begin{itemize}
-\item The ``pos'' or position angles are the angles reported by the joint encoders.
-\item The ``ref'' or reference angles are the commanded angles, the set point for the controllers. 
+\item The ``pos'' or position angles: the angles reported by the joint encoders.
+\item The ``ref'' or reference angles: the commanded angles, i.e. the set point for the controllers. 
 \end{itemize}
 Toggling between the two views immediately reveals any large discrepancy between the desired joint angles and the actual angles.
-Discrepancies tend to happen when there is a motor malfunction causing a motor to stop moving, or if a collision with an object is causing the limb to be unable to reach its target pose.
+This can reveal whether motors are being over-torqued.
+Discrepancies tend to happen when there is a motor malfunction causing a motor to stop moving, or if an obstacle is preventing a limb from reaching its target pose.
 
-Another situation where discrepancies occur is when certain joints were set to be in a compliant mode.
-During walking, for instance, DRC Hubo would enable compliance in the shoulder joints allowing the arms to swing side to side.
+Another situation where discrepancies occur is when certain joints are set to be in a compliant mode.
+During walking, for instance, DRC Hubo will enable compliance in the shoulder joints allowing the arms to swing side to side.
 This could be observed in the ``pos'' mode, but not in the ``ref'' mode since the arms were not being commanded to swing.
-One alternative to having a toggle switch was considered: showing both sets of angles at once using two robot models, where the reference angle model is made partially transparent.
-This is the approach used in OpenHubo. 
-However, this would have doubled the amount of geometry being rendered by the application, and transparency is more computationally expensive.
-In order to ensure the interface was fast and responsive, we opted for this toggle switch approach instead.
 
-\todo{Insert a paragraph explaining the quantitative interface. Joints with errors light up red, etc.}
+An alternative to having a toggle switch is to show both sets of angles at once using two robot models, where one or both models are partially transparent.
+This is the approach used in OpenHubo.
+This could have been done in the web app as well, at the cost of doubling the amount of geometry that needs to be rendered.
+
+In the plain text interface, more information about joints are available.
+The joint's three letter acronym is on the far left.
+To the right, are quantities that are harder to show on the 3D model, like the amount of current being used and the exact value of the encoder and reference angles.
+Most useful to us, we shows the "Homing flag" reported by the motor control board, indicating whether the joint is homed correctly.
+Joints whose motor control boards report an error (such as over-torqued or over-saturated) are highlighted in red.
 
 \subsubsection{Force Torque Sensors}
-\todo[inline]{TODO: Rework}
-Both Hubo 2+ and DRC Hubo have force-torque sensors in the wrists and ankles that measure the normal force, and the two moments perpendicular to the normal force.
-(That is, it does not measure the moment around the normal.)
-These measurements were visualized as vectors emanating from the hands and feet of the robot, seen in Fig. \ref{fig:Qualitative}).
-A major goal working with humanoid robots in the field is keeping the robot safe.
-Therefore the primary goal of the force-torque visuals was to alert the monitoring user if too much force was being exerted on the ankles and wrists.
-Users wanted to know when the robot was lifting something that was heavy enough to risk breaking the wrist, or was exerting more than the usual amount of force on its ankles.
-Too much force for an extended period of time could cause the ankle motors to burn out.
+Both Hubo 2+ and DRC Hubo have force-torque sensors in the wrists and ankles that measure the normal force and the two moments perpendicular to the normal force.
+These measurements were visualized as vectors emanating from the hands and feet of the robot, seen in Fig. \ref{fig:FT}).
+
+\begin{figure}[thpb]
+  \centering
+  \includegraphics[width=1.5in]{figures/FT.png}
+  \caption{Visualization of the force-torque data}
+  \label{fig:FT}
+\end{figure}
+
+The primary goal of the force-torque visuals was to alert the monitoring user if too much force was being exerted on the ankles and wrists.
 Therefore the force-torque vectors' colors are mapped to green, yellow, or red. 
-Green means the force is within a safe range, red means a risky range, and yellow means in between.
+Green means the force is within a safe range, red means too much, and yellow means in between.
 The exact values to use as thresholds between green, yellow, and red can be set by the user in the web interface.
 
 \subsubsection{Inertial Measurement Unit}
-\todo[inline]{TODO: Rework}
-Both Hubo 2+ and DRC Hubo have an inertial motion unit (IMU) in the torso and one in each leg.
-Only the torso IMU was visualized in the qualitative interface; however, up to 3 IMUs were displayed in the quantitative interface.
+Both Hubo 2+ and DRC Hubo have one inertial motion unit (IMU) in the torso and one in each leg.
+The torso IMU was visualized in the WebGL interface; however, all 3 IMUs were displayed in the plain text interface.
 The primary use of the torso IMU was to indicate the orientation of the robot against the ground.
 Of all the data to be monitored, this is one of the most important, particularly for tasks like ladder climbing and walking.
 A poor orientation could indicate the robot was not well placed or did not have a good grip on the ladder.
@@ -399,8 +392,7 @@ Because the monitoring user could rotate the 3D graphical model of the robot in 
 To properly visualize the orientation of the robot, a reference plane was inserted in the visualization at the robot's foot level.
 % Make "better situational awareness" a key focus issue of the paper. One of the goals mentioned originally.
 
-\subsection{Optimizations}
-\todo[inline]{Revised}
+\subsection{Optimization}
 While the primary components of the system (Three.js, Node, and Firebase / Socket.IO) are all relatively easy to use, optimizations on the client and server were needed to achieve the high throughput and smooth rendering performance of our system.
 The initial prototype of the system relied naively on the Firebase API.
 On the server side, it would upload a JSON structure of the robot state every update.
@@ -419,7 +411,7 @@ When the private cloud option was developed using Socket.IO, this helped free up
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{RESULTS}
-\todo[inline]{New}
+%- Additional qualitative feedback about performance would be helpful here.  I'm guessing that it still performs (feels) better on some platforms vs. others.
 The interface was tested on a variety of platforms to verify its cross-platform compatibility.
 These tests were done using the private cloud interface (i.e. the socket.io backend, not the Firebase backend).
 For mobile testing, we used a Nexus 5 smartphone and the Nexus 7 tablet by Google.
@@ -427,6 +419,8 @@ For desktop testing, we used the author's laptop, which happens to be a Toshiba 
 Testing for OSX and iOS were done on Apple hardware for obvious reasons.
 The results of desktop testing are shown in Table \ref{tab:DesktopTesting}.
 The results of mobile testing are shown in Table \ref{tab:MobileTesting}.
+In general, the desktop browsers that supported WebGL all felt equally good.
+However, on the mobile testing, it felt like Chrome did smoother rotate/pan/zoom than Firefox.
 
 \begin{table}[h]
 \begin{center}
@@ -435,9 +429,9 @@ The results of mobile testing are shown in Table \ref{tab:MobileTesting}.
 \label{tab:DesktopTesting}
 \begin{tabular}{|c|c|c|c|c|c|}
 \hline         & \multicolumn{4}{|c|}{Windows 7 (Toshiba Portege z835)} & \multicolumn{1}{|c|}{OSX} \\ 
-\hline          & IE 11            & Chrome 32 & Firefox 26       & Opera 19 & Safari 7 \\ 
-\hline Hubo 2+  & \xmark \tnote{1} & \cmark    & \cmark \tnote{2} & \cmark   & \cmark  \tnote{2} \tnote{,3} \\ 
-\hline DRC Hubo & \cmark \tnote{2} & \cmark    & \cmark \tnote{2} & \cmark   & \cmark  \tnote{2} \tnote{,3} \\ 
+\hline          & IE 11            & Chrome 32 & Firefox 26 & Opera 19 & Safari 7 \\ 
+\hline Hubo 2+  & \xmark \tnote{1} & \cmark    & \cmark     & \cmark   & \cmark  \tnote{2} \tnote{,3} \\ 
+\hline DRC Hubo & \cmark \tnote{2} & \cmark    & \cmark     & \cmark   & \cmark  \tnote{2} \tnote{,3} \\ 
 \hline 
 \end{tabular} 
 \begin{tablenotes}
@@ -454,10 +448,10 @@ The results of mobile testing are shown in Table \ref{tab:MobileTesting}.
 \caption{Mobile Testing}
 \label{tab:MobileTesting}
 \begin{tabular}{|c|c|c|c|c|c|c|}
-\hline         & \multicolumn{4}{|c|}{Android 4.4 (Nexus 5)} & \multicolumn{2}{|c|}{iPad 3000} \\ 
-\hline         & Chrome & Firefox          & Dolphin          & Opera  & Chrome & Safari \\ 
-\hline Hubo 2+ & \cmark & \cmark \tnote{1} & \xmark \tnote{2} & \cmark &        & \\ 
-\hline DRC Hubo& \cmark & \cmark \tnote{1} & \xmark \tnote{2} & \cmark &        & \\ 
+\hline         & \multicolumn{4}{|c|}{Android 4.4 (Nexus 5)} & \multicolumn{2}{|c|}{iOS 7 (iPad 2)} \\ 
+\hline         & Chrome & Firefox          & Dolphin          & Opera  & Chrome           & Safari \\ 
+\hline Hubo 2+ & \cmark & \cmark \tnote{1} & \xmark \tnote{2} & \cmark & \xmark \tnote{2} & \xmark \tnote{2} \\ 
+\hline DRC Hubo& \cmark & \cmark \tnote{1} & \xmark \tnote{2} & \cmark & \xmark \tnote{2} & \xmark \tnote{2} \\ 
 \hline 
 \end{tabular} 
 \begin{tablenotes}
@@ -469,37 +463,34 @@ The results of mobile testing are shown in Table \ref{tab:MobileTesting}.
 \end{table}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{CONCLUSIONS}
-\todo[inline]{New}
+\section{CONCLUSIONS & FUTURE WORK}
 % Cross-platform
 % Increases situational awareness
-We have developed a cross-platform system for monitoring humanoid robots to improve the situational awareness of the robot operators.
+We have developed a cross-platform system for monitoring high degree of freedom robots to improve the situational awareness of the robot operators.
 % Zero install
 %   for these platforms
 By creating a web interface, we have eliminated the need for users to install any special software.
 % Mobile
 %   tested on phone and tablet
-The system works well on both desktop and mobile devices, and has been tested on laptops, the Nexus 5 smart phone, and the Nexus 7 tablet.
+The system works well on both desktop and mobile devices, and has been tested successfully on laptops, the Nexus 5 smartphone, and the Nexus 7 tablet.
 % Runs on cloud services (public/private)
 %   tested on both
 The system has been tested in both private and public cloud configuration.
 % Tested on two platforms
-The interface has been tested on two hardware platforms, the Hubo 2+ and DRC Hubo.
+Finally, the interface has been tested on two hardware platforms, the Hubo 2+ and DRC Hubo.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{FUTURE WORK}
-\todo[inline]{Revised}
 One of the advantages of using the \textit{Three.js} library for rendering is that there is a software rendering fallback if WebGL is not supported in the browser.
 In the future, we could adapt to the users' browser by detecting if WebGL is unavailable, and downloading a special ``low polygon count'' version of the robot that will render efficiently on browsers using software rendering.
 This will increase the number of devices supported.
 
-The system described in this paper only addresses feedback from the robot.
-We are currently working on adding feedforward ability, so that users can control the robot from the interface.
+The system described in this paper only addresses monitoring from the robot.
+We have been working on another web interface that interfaces to a simulation environment, in which users can control the robot.
+We are currently working on how to safely close the loop, so that users can control the robot from the interface.
 Future work will involve how to deal with multiple users all connected to the robot and trying to control it at the same time.
 Negotiating which client has control of the robot, or deciding how multiple users can do simultaneous control, are ongoing research.
 
 Lastly, we hope to make the system useful to a wider audience by integrating it with more types of robots.
-The 3D interface already works with ROS's URDF format so many types of robots could be loaded into the interface.
+The 3D interface already works with ROS's URDF format so many types of robots could be loaded into the interface, such as DARwIn-OP, Nao, PR2, and Baxter.
 Since the underlying Websocket technology is similar to that used by the Rosbridge suite, we are looking at adapting the interface to work with the Rosbridge suite.
 
 
