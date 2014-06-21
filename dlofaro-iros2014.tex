@@ -38,15 +38,15 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \title{\LARGE \bf
-A lightweight, cross-platform, multiuser robot visualization \\ using the cloud*
+A lightweight, cross-platform, multiuser robot visualization \\ using the cloud
 }
 
-\author{William Hilton$^{1}$, Dan Lofaro$^{2}$, and Youngmoo Kim$^{3}$% <-this % stops a space
+\author{William Hilton$^{1}$, Daniel M. Lofaro$^{2}$, and Youngmoo Kim$^{3}$% <-this % stops a space
 \thanks{*This work was supported in part by NSF CNS-0960061: MRI-R2 Development of a Common Platform for Unifying Humanoids Research.}% <-this % stops a space
 \thanks{$^{1}$William Hilton is with Department of Electrical Engineering, Drexel University,
         Philadelphia, PA 19104, USA
         {\tt\small wmhilton@drexel.edu}}%        
-\thanks{$^{2}$Dan Lofaro is with Department of Electrical Engineering, George Mason University,
+\thanks{$^{2}$Daniel M. Lofaro is with Department of Electrical Engineering, George Mason University,
         Fairfax, VA 22030, USA
         {\tt\small dlofaro@gmu.edu}}%
 %\thanks{$^{2}$Paul Oh is with Faculty of Mechanical Engineering, Drexel University,
@@ -95,7 +95,7 @@ The system was successfully tested with two different robots and on multiple bro
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{INTRODUCTION}
 Mobile devices (smartphones and tablets) have improved so much in a few short years that they are rapidly encroaching on niches previously held by laptops and desktops.
-But traditional software used in robotics research, such as the Linux console and ROS, does not lend itself to running on mobile devices.
+But traditional software used in robotics research, such as the Linux console and ROS (Robot Operating System), does not lend itself to running on mobile devices.
 Their user interfaces were designed for desktop screens, rely heavily on keyboard interaction, and aren't designed for touch interaction.
 
 While desktops and laptops will undoubtedly remain the primary devices on which robotics software and algorithms are written, there are times when mobile devices would be useful.
@@ -170,6 +170,8 @@ Yet another website, \url{mymodelrobot.appspot.com} by Igor Zubrycki, lets users
 These tools use WebGL to visualize robots, but not on mobile devices.
 Our solution appears to be the first to support robot meshes defined in STL format instead of Collada.
 However, it currently lacks texture support found in \texttt{wviz} and \texttt{ros3d.js}.
+The STL format was chosen because the widely used OpenHubo simulator for the Hubo2/2+ robot  \cite{lofaro2012humanoid} is defined using this format.
+After initial submission of this document GzWeb, a WebGL Client for GazeboSim\footnote{\url{http://gazebosim.org/}} was released which also supports Collada but not STL formats.
 
 % Borrowed rosbridge for inspiration.
 The most popular robotics software collection of the moment is Robot Operating System (ROS). \cite{quigley2009ros}
@@ -310,7 +312,7 @@ Because the kinematic models for the robot are not hard-coded by loaded dynamica
 \begin{figure}[thpb]
   \centering
   \includegraphics[height=3in]{figures/drchubo.jpg}
-  \caption{Testing the fullscreen WebGL interface for DRC Hubo running on a Nexus 5 phone.}
+  \caption{Testing the fullscreen WebGL interface for DRC-Hubo running on a Nexus 5 phone.}
   \label{fig:DRCHubo}
 \end{figure}
 
@@ -414,13 +416,16 @@ When the private cloud option was developed using Socket.IO, this helped free up
 %- Additional qualitative feedback about performance would be helpful here.  I'm guessing that it still performs (feels) better on some platforms vs. others.
 The interface was tested on a variety of platforms to verify its cross-platform compatibility.
 These tests were done using the private cloud interface (i.e. the socket.io backend, not the Firebase backend).
+Further testing was done using the public cloud (via Firebase).
+Initial public cloud testing was done between Drexel University and George Mason University.
 For mobile testing, we used a Nexus 5 smartphone and the Nexus 7 tablet by Google.
-For desktop testing, we used the author's laptop, which happens to be a Toshiba Portege z835 ultrabook.
+For desktop testing, we used a Toshiba Portege z835 ultrabook running Windows 7.
 Testing for OSX and iOS were done on Apple hardware for obvious reasons.
 The results of desktop testing are shown in Table \ref{tab:DesktopTesting}.
 The results of mobile testing are shown in Table \ref{tab:MobileTesting}.
 In general, the desktop browsers that supported WebGL all felt equally good.
 However, on the mobile testing, it felt like Chrome did smoother rotate/pan/zoom than Firefox.
+Video of live testing using the private cloud can be viewed here: http://youtu.be/0CgD6Syb60g
 
 \begin{table}[h]
 \begin{center}
@@ -463,7 +468,7 @@ However, on the mobile testing, it felt like Chrome did smoother rotate/pan/zoom
 \end{table}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{CONCLUSIONS & FUTURE WORK}
+\section{CONCLUSIONS \& FUTURE WORK}
 % Cross-platform
 % Increases situational awareness
 We have developed a cross-platform system for monitoring high degree of freedom robots to improve the situational awareness of the robot operators.
